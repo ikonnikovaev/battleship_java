@@ -40,6 +40,9 @@ public class Main {
         int rt = Math.max(r1, r2);
         int cs = Math.min(c1, c2);
         int ct = Math.max(c1, c2);
+        if (rs < 0 || rt >= FIELD_SIZE || cs < 0 || ct > FIELD_SIZE) {
+            throw new Exception("You entered the wrong coordinates!");
+        }
         if (dr * dc != 0) {
             throw new Exception("Wrong ship location!");
         }
@@ -81,8 +84,40 @@ public class Main {
                 System.out.printf("Error! %s Try again:", e.getMessage());
             }
         }
+    }
+
+    public static boolean shoot(int r, int c) throws Exception {
+        if (r < 0 || r >= FIELD_SIZE || c < 0 || c > FIELD_SIZE) {
+            throw new Exception("You entered the wrong coordinates!");
+        }
+        if (field[r][c] == '~') {
+            field[r][c] = 'M';
+            printField();
+            System.out.println("You missed!");
+        } else {
+            field[r][c] = 'X';
+            printField();
+            System.out.println("You hit a ship!");
+        }
+        return true;
+    }
 
 
+    public static void takeShot() {
+        Scanner scanner = new Scanner(System.in);
+        boolean shotMade = false;
+        String prompt = "Take a shot!";
+        System.out.println(prompt);
+        while (!shotMade) {
+            String coord = scanner.next();
+            int r = coord.charAt(0) - 'A';
+            int c = Integer.parseInt(coord.substring(1)) - 1;
+            try {
+                shotMade = shoot(r, c);
+            } catch (Exception e) {
+                System.out.printf("Error! %s Try again:", e.getMessage());
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -94,6 +129,9 @@ public class Main {
             createShip(shipTypes[k], shipLengths[k]);
             printField();
         }
+        System.out.println("The game starts!");
+        takeShot();
+
 
     }
 }
