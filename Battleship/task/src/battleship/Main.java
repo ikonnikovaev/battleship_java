@@ -18,7 +18,7 @@ public class Main {
         }
     }
 
-    public static void printField() {
+    public static void printField(boolean fogged) {
         System.out.print(" ");
         for (int j = 0; j < FIELD_SIZE; ++j) {
             System.out.print(" " + (j + 1));
@@ -27,11 +27,17 @@ public class Main {
         for (int i = 0; i < FIELD_SIZE; ++i) {
             System.out.print((char) ('A' + i));
             for (int j = 0; j < FIELD_SIZE; ++j) {
-                System.out.print(" " + field[i][j]);
+                char ch = field[i][j];
+                if (fogged && ch == 'O') {
+                    ch = '~';
+                }
+                System.out.print(" " + ch);
             }
             System.out.println();
         }
     }
+
+
 
     public static boolean placeShip(int r1, int c1, int r2, int c2, String type, int len) throws Exception {
         int dr = Math.abs(r1 - r2);
@@ -92,11 +98,11 @@ public class Main {
         }
         if (field[r][c] == '~') {
             field[r][c] = 'M';
-            printField();
+            printField(true);
             System.out.println("You missed!");
         } else {
             field[r][c] = 'X';
-            printField();
+            printField(true);
             System.out.println("You hit a ship!");
         }
         return true;
@@ -122,16 +128,17 @@ public class Main {
 
     public static void main(String[] args) {
         initField();
-        printField();
+        printField(false);
         String[] shipTypes = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
         int[] shipLengths = {5, 4, 3, 3, 2};
         for (int k = 0; k < shipTypes.length; ++k) {
             createShip(shipTypes[k], shipLengths[k]);
-            printField();
+            printField(false);
         }
         System.out.println("The game starts!");
+        printField(true);
         takeShot();
-
+        printField(false);
 
     }
 }
